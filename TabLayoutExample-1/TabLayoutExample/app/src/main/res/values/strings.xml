@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TabLayoutExample</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ip_addr">type plug ip address...</string>
+    <string name="on_com">type command text ON...</string>
+    <string name="off_com">type command text OFF...</string>
+    <string name="plug_name">type name for the plug...</string>
+</resources>

@@ -1,0 +1,103 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal"
+    android:textAlignment="center"
+    android:background="@color/colorPrimaryDark"
+    tools:context="com.tablelayout.javacodegeeks.mallamba.addForm">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAlignment="center"
+        android:text="@string/hello_blank_fragment"
+        android:textColor="@color/colorWhite" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textAlignment="center">
+
+        <EditText
+            android:id="@+id/ip_addr"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="@string/ip_addr"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite">
+
+        </EditText>
+
+        <EditText
+            android:layout_below="@id/ip_addr"
+            android:id="@+id/on_com"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="@string/on_com"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite">
+
+        </EditText>
+
+        <EditText
+            android:layout_below="@id/on_com"
+            android:id="@+id/off_com"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="@string/off_com"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite">
+
+        </EditText>
+
+        <EditText
+            android:layout_below="@id/off_com"
+            android:id="@+id/plug_name"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:hint="@string/plug_name"
+            android:textColor="@color/colorWhite"
+            android:textColorHint="@color/colorWhite">
+
+        </EditText>
+
+        <LinearLayout
+            android:layout_below="@id/plug_name"
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_height="100dp"
+            android:weightSum="2"
+            android:layout_marginTop="20dp">
+
+            <ImageButton
+                android:id="@+id/btn_test"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:src="@drawable/round">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/btn_add"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:src="@drawable/plus">
+
+            </ImageButton>
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

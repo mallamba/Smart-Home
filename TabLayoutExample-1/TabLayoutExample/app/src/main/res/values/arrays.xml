@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="namesArray">
+        <item >Living room 1</item>
+        <item >Living room 2</item>
+        <item >Hall</item>
+        <item >Bedroom</item>
+        <item >Kitchen 1</item>
+        <item >Kitchen 2</item>
+        <item >Computer</item>
+        <item >TV</item>
+        <item >Studio 1</item>
+        <item >Studio 2</item>
+        <item >Aquarium</item>
+        <item >Floor Light</item>
+    </string-array>
+
+    <string-array name="urlArray">
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+    </string-array>
+
+
+    <string-array name="ipArray">
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+        <item ></item>
+    </string-array>
+
+
+</resources>
