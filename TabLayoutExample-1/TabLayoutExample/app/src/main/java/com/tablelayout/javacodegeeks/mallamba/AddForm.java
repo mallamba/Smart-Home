@@ -1,6 +1,7 @@
 package com.tablelayout.javacodegeeks.mallamba;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -9,9 +10,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.tablelayout.javacodegeeks.tablayoutexample.R;
 
 /**
@@ -36,9 +45,15 @@ public class AddForm extends Fragment implements View.OnClickListener {
     private EditText ed_ip, ed_on, ed_off, ed_text;
 
     private OnFragmentInteractionListener mListener;
-
-    public AddForm( ) {
+    RequestQueue queue;
+    SecondFragment sF;
+    public AddForm() {
         // Required empty public constructor
+
+    }
+    public void addSecondFragment(SecondFragment sF) {
+        // Required empty public constructor
+        this.sF = sF;
     }
 
     /**
@@ -72,10 +87,6 @@ public class AddForm extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
-
-
         return inflater.inflate(R.layout.fragment_add_form, container, false);
     }
 
@@ -88,20 +99,16 @@ public class AddForm extends Fragment implements View.OnClickListener {
         test_btn = getActivity().findViewById(R.id.btn_test);
         test_btn.setOnClickListener(this);
         add_btn = getActivity().findViewById(R.id.btn_add);
-        test_btn.setOnClickListener(this);
+        add_btn.setOnClickListener(this);
 
-        ed_ip = getActivity().findViewById(R.id.ip_addr);;
-        ed_on = getActivity().findViewById(R.id.on_com);;
-        ed_off = getActivity().findViewById(R.id.off_com);;
-        ed_text = getActivity().findViewById(R.id.plug_name);;
+        ed_ip = getActivity().findViewById(R.id.ip_addr);
+        ed_on = getActivity().findViewById(R.id.on_com);
+        ed_off = getActivity().findViewById(R.id.off_com);
+        ed_text = getActivity().findViewById(R.id.plug_name);
+        queue = Volley.newRequestQueue(getContext());
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -120,20 +127,26 @@ public class AddForm extends Fragment implements View.OnClickListener {
         Vibrator vibe;
         vibe = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         String[] inputs = new String[4];
-        inputs[0] = ed_ip.getText().toString();
-        inputs[1] = ed_on.getText().toString();
+        inputs[0] = "http://" + ed_ip.getText().toString() + "/update";
+        inputs[1] = "http://" + ed_ip.getText().toString() + "/";
         inputs[2] = ed_off.getText().toString();
         inputs[3] = ed_text.getText().toString();
+
+
         switch (view.getId()) {
             // Living-room One
             case R.id.btn_test:
                 vibe.vibrate(500);
-
+                clickButton(test_btn, true, inputs[0], inputs[1] );
                 break;
             // Living-room One
             case R.id.btn_add:
                 vibe.vibrate(500);
-
+                add_btn.setBackgroundColor(Color.WHITE);
+                sF.createButton(inputs[3] , inputs[1]);
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.remove(this);
+                ft.commit();
                 break;
         }
     }
@@ -152,4 +165,43 @@ public class AddForm extends Fragment implements View.OnClickListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    public void clickButton(final ImageButton btn, final boolean repeat, String url, final String ip) {
+
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(repeat)
+                    makeAction( btn, response.toString(), ip);
+                if(response.equals("0"))
+                    btn.setBackgroundColor(Color.RED);
+                else if(response.equals("1"))
+                    btn.setBackgroundColor(Color.WHITE);
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),"ERROR", Toast.LENGTH_SHORT).show();//display the response on screen
+            }
+        });
+
+        queue.add(request);
+    }
+
+    public void makeAction(ImageButton btn, String str, String ip) {
+        String url = ip;
+        if(str.equals("0")) {
+            url += "on";
+            clickButton(btn, false, url, ip);
+
+        }
+        else if(str.equals("1")) {
+            url += "off";
+            clickButton(btn, false, url, ip);
+        }
+    }
+
 }

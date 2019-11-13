@@ -1,47 +1,49 @@
 package com.tablelayout.javacodegeeks.mallamba;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.TableLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.tablelayout.javacodegeeks.tablayoutexample.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
-import static android.content.ContentValues.TAG;
-import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class SecondFragment extends Fragment
         implements View.OnClickListener {
-    Button livBtn1, livBtn2, hallBtn, bedBtn, kitchBtn1, kitchBtn2, compBtn, tvBtn, stdBtn1, stdBtn2, aquBtn, floorBtn;
+
     Button add_btn;
     String[] urlArray, ipArray, nameArray;
     Button[] btnArray;
 
+    Map<String,String> ip_Map;
+    List<Button> btn_list;
+    GridLayout l_layout;
     RequestQueue queue;
 
     Vibrator vibe;
@@ -68,33 +70,27 @@ public class SecondFragment extends Fragment
 
 
     public void initButtons() {
+        l_layout = getActivity().findViewById(R.id.conts);
         add_btn = getActivity().findViewById(R.id.add_plug);
         add_btn.setOnClickListener(this);
-        btnArray = new Button[12];
-        btnArray[0] = getActivity().findViewById(R.id.livingBtn1);
 
-        btnArray[1] = getActivity().findViewById(R.id.livingBtn2);
-        btnArray[2] = getActivity().findViewById(R.id.hallBtn);
-        btnArray[3] = getActivity().findViewById(R.id.bedBtn);
-        btnArray[4] = getActivity().findViewById(R.id.kitchenBtn1);
-        btnArray[5] = getActivity().findViewById(R.id.kitchenBtn2);
-        btnArray[6] = getActivity().findViewById(R.id.compBtn);
-        btnArray[7] = getActivity().findViewById(R.id.tvBtn);
-        btnArray[8] = getActivity().findViewById(R.id.studioBtn1);
-        btnArray[9] = getActivity().findViewById(R.id.studioBtn2);
-        btnArray[10] = getActivity().findViewById(R.id.aquariumBtn);
-        btnArray[11] = getActivity().findViewById(R.id.floorBtn);
-
-        for (int i = 0; i < btnArray.length; i++) {
-            btnArray[i].setOnClickListener(this);
-        }
-
+        btn_list = new ArrayList<>();
+        ip_Map = new HashMap<>();
         queue = Volley.newRequestQueue(getContext());
     }
 
     public void initUrls() {
-        urlArray = getResources().getStringArray(R.array.urlArray);
-        ipArray = getResources().getStringArray(R.array.ipArray);
+        SharedPreferences keyValues = getContext().getSharedPreferences("hashmap", Context.MODE_PRIVATE);
+        SharedPreferences.Editor keyValuesEditor = keyValues.edit();
+
+        try {
+            ip_Map = (Map<String, String>) keyValues.getAll();
+        }catch(Exception e ){
+            Log.d(" ---------------  ---- ",e.getMessage() );
+            ip_Map = new HashMap<>();
+        }
+        filButtons();
+
     }
 
     public void initNames() {
@@ -109,92 +105,22 @@ public class SecondFragment extends Fragment
             // Living-room One
             case R.id.add_plug:
                 vibe.vibrate(500);
+                AddForm aF = new AddForm();
+                aF.addSecondFragment(this);
                 FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_placeholder, new AddForm());
+                ft.replace(R.id.fragment_placeholder, aF);
+
                 ft.commit();
                 break;
-            // Living-room One
-            case R.id.livingBtn1:
-                vibe.vibrate(500);
-                url = "http://192.168.0.121/update";
-                ip = "http://192.168.0.121/";
-                clickButton(btnArray[0], true, url, ip);
-                break;
-            // Living-room Two
-            case R.id.livingBtn2:
-                vibe.vibrate(500);
-                url = "http://192.168.0.122/update";
-                ip = "http://192.168.0.122/";
-                clickButton(btnArray[1], true, url, ip);
-                break;
-             //*******************************************//
 
-            // Hall
-            case R.id.hallBtn:
-                vibe.vibrate(500);
-                url = "http://192.168.0.123/update";
-                ip = "http://192.168.0.123/";
-                clickButton(btnArray[2], true, url, ip);
-                break;
-            // Bedroom
-            case R.id.bedBtn:
-                vibe.vibrate(500);
-                url = "http://192.168.0.124/update";
-                ip = "http://192.168.0.124/";
-                clickButton(btnArray[3], true, url, ip);
-                break;
-            //*******************************************//
-
-            // Kitchen One
-            case R.id.kitchenBtn1:
-                vibe.vibrate(500);
-                url = "http://192.168.0.131/update";
-                ip = "http://192.168.0.131/";
-                clickButton(btnArray[4], true, url, ip);
-                break;
-            // Kitchen Two
-            case R.id.kitchenBtn2:
-                vibe.vibrate(500);
-                url = "http://192.168.0.132/update";
-                ip = "http://192.168.0.132/";
-                clickButton(btnArray[5], true, url, ip);
-                break;
-            //*******************************************//
-
-            // Studio One
-            case R.id.studioBtn1:
-                vibe.vibrate(500);
-                url = "http://192.168.0.137/update";
-                ip = "http://192.168.0.137/";
-                clickButton(btnArray[8], true, url, ip);
-                break;
-            // Studio Two
-            case R.id.studioBtn2:
-                vibe.vibrate(500);
-                url ="http://192.168.0.139/update";
-                ip = "http://192.168.0.139/";
-                clickButton(btnArray[9], true, url, ip);
-                break;
-            //*******************************************//
-
-            // Aquarium
-            case R.id.aquariumBtn:
-                vibe.vibrate(500);
-                url = "http://192.168.0.127/update";
-                ip = "http://192.168.0.127/";
-                clickButton(btnArray[10], true, url, ip);
-                break;
-            // Nothing
-            /*
-            case R.id.studioBtn2:
-            vibe.vibrate(500);
-                url ="http://192.168.0.139/update";
-                ip = "http://192.168.0.139/";
-                clickButton(stdBtn2, true, url, ip);
-                break;
-                */
-            //*******************************************//
         }
+        for (Button b : btn_list) {
+            if(b.getId() == view.getId()){
+                clickButton(b, true, ip_Map.get( b.getText() )+"update", ip_Map.get( b.getText() ));
+            }
+
+        }
+
     }
 
     public void clickButton(final Button btn, final boolean repeat, String url, final String ip) {
@@ -242,10 +168,11 @@ public class SecondFragment extends Fragment
     }
 
     public void update() {
-        for (int i = 0; i < urlArray.length; i++) {
-            vibe.vibrate(200);
-            clickButton(btnArray[i], false, urlArray[i], ipArray[i]);
-        }
+
+        //for (int i = 0; i < urlArray.length; i++) {
+          //  vibe.vibrate(200);
+            //clickButton(btnArray[i], false, urlArray[i], ipArray[i]);
+        //}
     }
 
     public int indexOf(Object[] array, Object obj) {
@@ -255,6 +182,48 @@ public class SecondFragment extends Fragment
                 index = i;
         }
         return index;
+    }
+
+
+    public void createButton(String btn_text, String ip_text){
+        Button btn = new Button( getContext() );
+        btn.setText(btn_text);
+        btn.setWidth(0);
+        btn.setHeight(80);
+        btn.setId(View.generateViewId());
+        GridLayout.LayoutParams param = new GridLayout.LayoutParams( GridLayout.spec( GridLayout.UNDEFINED,GridLayout.FILL,1f), GridLayout.spec(GridLayout.UNDEFINED,GridLayout.FILL,1f) );
+        btn.setLayoutParams(param);
+        btn_list.add(btn);
+        btn_list.get(btn_list.indexOf(btn)).setOnClickListener(this);
+        ip_Map.put(btn_text, ip_text);
+        l_layout.addView(btn);
+
+        saveHashMap();
+    }
+
+    public void filButtons(){
+        l_layout.removeAllViewsInLayout();
+        for (String s : ip_Map.keySet()) {
+            createButton( s, ip_Map.get(s));
+        }
+        /*
+        l_layout.addView(btn);
+        btn_list.add(btn);
+        btn_list.get(btn_list.indexOf(btn)).setOnClickListener(this);
+        ip_Map.put(btn_text, ip_text);
+        */
+
+    }
+
+    public void saveHashMap(){
+        SharedPreferences keyValues = getContext().getSharedPreferences("hashmap", Context.MODE_PRIVATE);
+        SharedPreferences.Editor keyValuesEditor = keyValues.edit();
+
+        for (String s : ip_Map.keySet()) {
+            keyValuesEditor.putString(s, ip_Map.get(s));
+        }
+
+        keyValuesEditor.apply();
     }
 
 }
